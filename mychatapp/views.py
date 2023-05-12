@@ -21,22 +21,16 @@ engine = pyttsx3.init()
 def index(request):
     if request.method == 'POST':
         message = request.POST.get('message')
-
-        # Convert the message to speech
+        #Convert the message to speech
         engine.say(message)
         engine.runAndWait()
-
         # Save the chat message to the database
         ChatMessage.objects.create(message=message)
-
         return redirect('index')
-
-    messages = ChatMessage.objects.all().order_by('-timestamp')[:50]
-
-
+        messages = ChatMessage.objects.all().order_by('-timestamp')[:50]
     user = request.user.profile
     friends = user.friends.all()
-    context = {"user": user, "friends": friends,'messages': messages}
+    context = {"user": user, "friends": friends}
     return render(request, "mychatapp/index.html", context)
 
 
